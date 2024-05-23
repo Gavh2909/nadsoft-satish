@@ -1,0 +1,32 @@
+.register-student{
+    min-width: 200px;
+    height: 70vh;
+    background-color: rgb(66, 66, 60);
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 7px 16px;
+    color: rgb(141, 189, 231);
+}
+.register-student p{
+    font-size: 12px;
+    color: rgb(173, 132, 132);
+}
+.register-student input, select{
+    width: 170px;
+    margin-top: 5px;
+    height: 22px;
+}
+.register-student button{
+    margin-top: 10px;
+    width: 100px;
+    height: 24px;
+    border-radius: 4px;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    background-color: rgb(148, 93, 11);
+}
+.register-student button:hover{
+    background-color:rgb(179, 138, 77) ;
+}

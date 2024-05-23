@@ -1,11 +1,22 @@
 const express = require('express');
 const mysql = require('mysql');
+const cors = require('cors')
 
 const body_parser = require('body-parser');
 
 const app = express();
 
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    next();
+});
 
+app.use(cors({
+    origin: 'http://localhost:3000'
+}));
+  
 const database = mysql.createConnection({
     host: 'localhost',
     user: 'root',
@@ -33,7 +44,7 @@ app.post('/students/register',(req,res) =>{
             return;
         }
         // console.log("Student Registered succesfully!!")
-        res.status(201).json({message: "Student registered success!!"});
+        res.status(201).json({message: "Student registered successfully!!"});
     })
 })
 
@@ -41,14 +52,11 @@ app.post('/students/register',(req,res) =>{
 // Retriving all the existing stidentys
 
 app.get('/students/all',(req,res)=>{
-    
     let sql_query = "SELECT * FROM Students";
-
     database.query(sql_query, (error, result)=>{
         if(error){
             res.json({message:"Failed to get students try after some minuted"});
         }
-        
         res.json(result);
     })
 })
@@ -56,19 +64,18 @@ app.get('/students/all',(req,res)=>{
 
 // 3. Getting single student by id
 
-app.get('students/get/:id', (req,res)=>{
+app.get('/students/get/:id', (req,res)=>{
     let studentId = req.params.id;
 
     let sql_query="SELECT * FROM students where student_id=?"
 
-    db.query(sql_query,[studentId], (error,result)=>{
+    database.query(sql_query,[studentId], (error,result)=>{
         if(error){
-            res.status(500).json({message:"No student present with this isd!!"})
+            res.status(500).json({message:"No student present with this id!!"})
             return;
         }
         res.json(result);
     });
-
 })
 
 
@@ -78,18 +85,17 @@ app.put('/students/edit/:id', (req, res) => {
     const studentId = req.params.id;
     const { firstName, lastName, dateOfBirth, gender="Male" } = req.body;
     const sql = 'UPDATE students SET first_name = ?,last_name=?,  date_of_birth = ?, gender = ? WHERE student_id = ?';
+    
     database.query(sql, [studentId, firstName, lastName, dateOfBirth, gender], (err, result) => {
         if (err) {
             res.status(500).json({ error: err.message });
             return;
         }
-        
         res.json({ message: 'Student updated successfully!!' });
     });
 });
 
 // delete the exsting student
-
 app.delete('/students/delete/:id', (req, res) => {
     const studentId = req.params.id;
     const sql = 'DELETE from students where student_id = ?';
@@ -98,9 +104,9 @@ app.delete('/students/delete/:id', (req, res) => {
             res.status(500).json({ error: err.message });
             return;
         }
-        res.json({ message: 'Student deleted!!' });
+        res.json({ message: 'Student deleted successfully!!' });
     });
 });
 
-const PORT = 3000;
+const PORT = 3004;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
