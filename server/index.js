@@ -48,9 +48,59 @@ app.get('/students/all',(req,res)=>{
         if(error){
             res.json({message:"Failed to get students try after some minuted"});
         }
-
+        
         res.json(result);
     })
 })
+
+
+// 3. Getting single student by id
+
+app.get('students/get/:id', (req,res)=>{
+    let studentId = req.params.id;
+
+    let sql_query="SELECT * FROM students where student_id=?"
+
+    db.query(sql_query,[studentId], (error,result)=>{
+        if(error){
+            res.status(500).json({message:"No student present with this isd!!"})
+            return;
+        }
+        res.json(result);
+    });
+
+})
+
+
+
+// edit the student
+app.put('/students/edit/:id', (req, res) => {
+    const studentId = req.params.id;
+    const { firstName, lastName, dateOfBirth, gender="Male" } = req.body;
+    const sql = 'UPDATE students SET first_name = ?,last_name=?,  date_of_birth = ?, gender = ? WHERE student_id = ?';
+    database.query(sql, [studentId, firstName, lastName, dateOfBirth, gender], (err, result) => {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        
+        res.json({ message: 'Student updated successfully!!' });
+    });
+});
+
+// delete the exsting student
+
+app.delete('/students/delete/:id', (req, res) => {
+    const studentId = req.params.id;
+    const sql = 'DELETE from students where student_id = ?';
+    database.query(sql, [studentId], (err, result) => {
+        if (err) {
+            res.status(500).json({ error: err.message });
+            return;
+        }
+        res.json({ message: 'Student deleted!!' });
+    });
+});
+
 const PORT = 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
