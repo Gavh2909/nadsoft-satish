@@ -22,14 +22,14 @@ database.connect((error) => {
 });
 
 // New Student registration -> POST API
-
+app.use(body_parser.json())
 app.post('/students/register',(req,res) =>{
-    const {firstName, lastName, dateOfBirth, gender} = req.body();
+    const {firstName, lastName, dateOfBirth, gender} = req.body;
     let sql_query = 'INSERT INTO Students (first_name, last_name, date_of_birth, gender) Values (?,?,?,?)';
 
     database.query(sql_query,[firstName, lastName, dateOfBirth, gender], (error, result)=>{
         if(error){
-            console.log("Failed to register a student!!");
+            console.log("Failed to register a student!!",error);
             return;
         }
         console.log("Student Registered succesfully!!")
