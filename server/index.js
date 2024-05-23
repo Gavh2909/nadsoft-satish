@@ -32,9 +32,25 @@ app.post('/students/register',(req,res) =>{
             console.log("Failed to register a student!!",error);
             return;
         }
-        console.log("Student Registered succesfully!!")
+        // console.log("Student Registered succesfully!!")
+        res.status(201).json({message: "Student registered success!!"});
     })
 })
 
+
+// Retriving all the existing stidentys
+
+app.get('/students/all',(req,res)=>{
+    
+    let sql_query = "SELECT * FROM Students";
+
+    database.query(sql_query, (error, result)=>{
+        if(error){
+            res.json({message:"Failed to get students try after some minuted"});
+        }
+
+        res.json(result);
+    })
+})
 const PORT = 3000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
